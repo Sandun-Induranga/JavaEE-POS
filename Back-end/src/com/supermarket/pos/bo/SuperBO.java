@@ -1,4 +1,4 @@
-package com.supermarket.pos.controller.bo;
+package com.supermarket.pos.bo;
 
 /**
  * @author : Sandun Induranga
