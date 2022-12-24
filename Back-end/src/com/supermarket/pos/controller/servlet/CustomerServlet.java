@@ -1,6 +1,9 @@
 package com.supermarket.pos.controller.servlet;
 
+import com.supermarket.pos.bo.BOFactory;
+import com.supermarket.pos.bo.SuperBO;
 import com.supermarket.pos.bo.custom.CustomerBO;
+import com.supermarket.pos.dto.CustomerDTO;
 
 import javax.annotation.Resource;
 import javax.json.*;
@@ -12,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
 
 /**
  * @author : Sandun Induranga
@@ -24,7 +28,7 @@ public class CustomerServlet extends HttpServlet {
     @Resource(name = "java:comp/env/jdbc/pool")
     DataSource dataSource;
 
-
+    private final CustomerBO customerBO = (CustomerBO) BOFactory.getInstance().getBO(BOFactory.BOTypes.CUSTOMER);
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -78,8 +82,20 @@ public class CustomerServlet extends HttpServlet {
 
         try (Connection connection = dataSource.getConnection()) {
 
+            ArrayList<CustomerDTO> all = customerBO.getAllCustomers(connection);
+
             PreparedStatement pstm = connection.prepareStatement("SELECT * FROM Customer");
             ResultSet resultSet = pstm.executeQuery();
+
+            for (CustomerDTO customerDTO : all) {
+
+                JsonObjectBuilder customer = Json.createObjectBuilder();
+
+                customer.add("id", resultSet.getString(1));
+                customer.add("name", resultSet.getString(2));
+                customer.add("address", resultSet.getString(3));
+                customer.add("salary", resultSet.getDouble(4));
+            }
 
             while (resultSet.next()) {
 
@@ -103,7 +119,7 @@ public class CustomerServlet extends HttpServlet {
 
             resp.getWriter().print(obj.build());
 
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             JsonObjectBuilder obj = Json.createObjectBuilder();
 
             obj.add("state", "Error");
