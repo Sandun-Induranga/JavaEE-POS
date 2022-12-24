@@ -16,5 +16,5 @@ public class CustomerDTO {
     String cusId;
     String cusName;
     String address;
-    String salary;
+    double salary;
 }
