@@ -1,8 +1,23 @@
 package com.supermarket.pos.dao;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+
 /**
  * @author : Sandun Induranga
  * @since : 0.1.0
  **/
-public interface CrudDAO {
+public interface CrudDAO<T, ID> extends SuperDAO{
+    ArrayList<T> getAll() throws SQLException, ClassNotFoundException;
+
+    boolean save(T dto) throws SQLException, ClassNotFoundException;
+
+    boolean update(T dto) throws SQLException, ClassNotFoundException;
+
+    T search(ID id) throws SQLException, ClassNotFoundException;
+
+    boolean exit(ID id) throws SQLException, ClassNotFoundException;
+
+    boolean delete(ID id) throws SQLException, ClassNotFoundException;
+
 }
