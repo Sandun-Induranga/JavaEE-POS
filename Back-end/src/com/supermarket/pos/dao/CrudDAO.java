@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * @author : Sandun Induranga
  * @since : 0.1.0
  **/
-public interface CrudDAO<T, ID> extends SuperDAO{
+public interface CrudDAO<T, ID> extends SuperDAO {
     ArrayList<T> getAll() throws SQLException, ClassNotFoundException;
 
     boolean save(T dto) throws SQLException, ClassNotFoundException;
