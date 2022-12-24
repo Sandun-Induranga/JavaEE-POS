@@ -169,11 +169,13 @@
 
 <!-- JS For Bootstrap -->
 <script src="assets/js/bootstrap.min.js"></script>
+
+<!-- JS For jQuery -->
 <script src="assets/js/jquery-3.6.1.min.js"></script>
 
 <script>
 
-    // const baseUrl = "http://localhost:8080/App_05/";
+    const baseUrl = "http://localhost:8080/backend/";
 
     loadAllCustomers();
 
@@ -189,7 +191,7 @@
 
         if ($(this).text() == "Save") {
             $.ajax({
-                url: "http://localhost:8080/App_05/" + "customer",
+                url: baseUrl + "customer",
                 type: "post",
                 data: formData,
                 dataType: "json",
@@ -197,14 +199,14 @@
                     loadAllCustomers();
                     alert(res.message);
                 },
-                error: function (error) {  // When status code equals to 500 then, this method has been invoked
+                error: function (error) {
                     let parse = JSON.parse(error.responseText);
                     alert(parse.message);
                 }
             });
         } else {
             $.ajax({
-                url: "http://localhost:8080/App_05/" + "customer",
+                url: baseUrl + "customer",
                 method: "put",
                 contentType: "application/json",
                 data: JSON.stringify(json),
@@ -213,7 +215,7 @@
                     loadAllCustomers();
                     alert(res.message);
                 },
-                error: function (error) {  // When status code equals to 500 then, this method has been invoked
+                error: function (error) {
                     let parse = JSON.parse(error.responseText);
                     alert(parse.message);
                 }
@@ -258,7 +260,7 @@
                     loadAllCustomers();
                     alert(res.message);
                 },
-                error: function (error) {  // When status code equals to 500 then, this method has been invoked
+                error: function (error) {
                     let parse = JSON.parse(error.responseText);
                     alert(parse.message);
                 }
@@ -280,7 +282,7 @@
 
     function loadAllCustomers() {
         $.ajax({
-            url: "http://localhost:8080/App_05/" +"customer",
+            url: baseUrl +"customer",
             type: "get",
             dataType: "json",
             success: function (res) {
@@ -296,16 +298,12 @@
                 bindDeleteEvent();
 
             },
-            error: function (error) {  // When status code equals to 500 then, this method has been invoked
+            error: function (error) {
                 let parse = JSON.parse(error.responseText);
                 alert(parse.message);
             }
         });
     }
-
-    // let customer = JSON.stringify(json);  // Method to convert javascript object to json object
-
-    // JSON.parse(); // Method to convert json object to javascript object
 
 </script>
 
