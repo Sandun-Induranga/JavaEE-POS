@@ -21,10 +21,10 @@ public class CustomerBOImpl implements CustomerBO, SuperBO {
     @Override
     public ArrayList<CustomerDTO> getAllCustomer(Connection connection) throws SQLException, ClassNotFoundException {
         ArrayList<CustomerDTO> allCustomers = new ArrayList<>();
-        ArrayList<Customer> all =  customerDAO.getAll(connection);
-        for (Customer customer: all
+        ArrayList<Customer> all = customerDAO.getAll(connection);
+        for (Customer customer : all
         ) {
-            allCustomers.add(new CustomerDTO(customer.getCustomerId(),customer.getCustomerName(),customer.getAddress(),customer.getSalary()));
+            allCustomers.add(new CustomerDTO(customer.getCustomerId(), customer.getCustomerName(), customer.getAddress(), customer.getSalary()));
         }
         return allCustomers;
     }

@@ -1,5 +1,7 @@
 package com.supermarket.pos.controller.servlet;
 
+import com.supermarket.pos.bo.custom.CustomerBO;
+
 import javax.annotation.Resource;
 import javax.json.*;
 import javax.servlet.ServletException;
@@ -21,6 +23,8 @@ public class CustomerServlet extends HttpServlet {
 
     @Resource(name = "java:comp/env/jdbc/pool")
     DataSource dataSource;
+
+
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
