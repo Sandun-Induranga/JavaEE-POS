@@ -1,4 +1,4 @@
-package dto;
+package com.supermarket.pos.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package controller.filter;
+package com.supermarket.pos.controller.filter;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;

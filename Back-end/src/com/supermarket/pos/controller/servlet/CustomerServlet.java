@@ -1,4 +1,4 @@
-package controller.servlet;
+package com.supermarket.pos.controller.servlet;
 
 import javax.annotation.Resource;
 import javax.json.*;
