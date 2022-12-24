@@ -11,7 +11,6 @@ import lombok.ToString;
  **/
 
 @AllArgsConstructor
-@NoArgsConstructor
 @Data
 @ToString
 public class CustomerDTO {
