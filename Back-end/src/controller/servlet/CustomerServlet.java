@@ -32,7 +32,7 @@ public class CustomerServlet extends HttpServlet {
         System.out.println("come");
 
 
-        try (Connection connection = dataSource.getConnection()){
+        try (Connection connection = dataSource.getConnection()) {
 
             PreparedStatement pstm = connection.prepareStatement("INSERT INTO Customer VALUES (?,?,?,?)");
 
@@ -73,7 +73,7 @@ public class CustomerServlet extends HttpServlet {
         JsonArrayBuilder allCustomers = Json.createArrayBuilder();
 
 
-        try (Connection connection = dataSource.getConnection()){
+        try (Connection connection = dataSource.getConnection()) {
 
             PreparedStatement pstm = connection.prepareStatement("SELECT * FROM Customer");
             ResultSet resultSet = pstm.executeQuery();
@@ -115,7 +115,7 @@ public class CustomerServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try (Connection connection = dataSource.getConnection()){
+        try (Connection connection = dataSource.getConnection()) {
 
             String cusId = req.getParameter("cusId");
 
@@ -135,7 +135,7 @@ public class CustomerServlet extends HttpServlet {
 
                 resp.getWriter().print(obj.build());
 
-            }else {
+            } else {
                 throw new SQLException("No Such Customer ID");
             }
 
@@ -163,7 +163,7 @@ public class CustomerServlet extends HttpServlet {
         String cusAddress = customer.getString("address");
         String cusSalary = customer.getString("cusSalary");
 
-        try(Connection connection = dataSource.getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
 
             PreparedStatement pstm = connection.prepareStatement("UPDATE Customer SET customerName=?, address=?, salary=? WHERE customerId=?");
 
@@ -175,7 +175,7 @@ public class CustomerServlet extends HttpServlet {
 
             connection.close();
 
-            if (b){
+            if (b) {
                 JsonObjectBuilder obj = Json.createObjectBuilder();
 
                 obj.add("state", "OK");
@@ -184,7 +184,7 @@ public class CustomerServlet extends HttpServlet {
                 resp.setStatus(200);
 
                 resp.getWriter().print(obj.build());
-            }else {
+            } else {
                 throw new SQLException("No Such Customer ID");
             }
 
