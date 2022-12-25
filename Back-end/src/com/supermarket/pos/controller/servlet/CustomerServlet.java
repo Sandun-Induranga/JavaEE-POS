@@ -1,7 +1,6 @@
 package com.supermarket.pos.controller.servlet;
 
 import com.supermarket.pos.bo.BOFactory;
-import com.supermarket.pos.bo.SuperBO;
 import com.supermarket.pos.bo.custom.CustomerBO;
 import com.supermarket.pos.dto.CustomerDTO;
 import com.supermarket.pos.util.MessageUtil;
