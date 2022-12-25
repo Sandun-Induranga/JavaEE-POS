@@ -46,7 +46,7 @@ public class CustomerDAOImpl implements CustomerDAO {
     }
 
     @Override
-    public boolean delete(Connection connection, String s) throws SQLException, ClassNotFoundException {
-        return false;
+    public boolean delete(Connection connection, String id) throws SQLException, ClassNotFoundException {
+        return SQLUtil.executeUpdate(connection, "DELETE FROM Customer WHERE customerId=?", id);
     }
 }
