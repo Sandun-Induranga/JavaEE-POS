@@ -134,46 +134,25 @@ public class CustomerServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         JsonReader reader = Json.createReader(req.getReader());
-
         JsonObject customer = reader.readObject();
 
         String cusId = customer.getString("id");
         String cusName = customer.getString("name");
         String cusAddress = customer.getString("address");
-        String cusSalary = customer.getString("cusSalary");
+        double cusSalary = Double.parseDouble(customer.getString("cusSalary"));
 
         try (Connection connection = dataSource.getConnection()) {
 
-            PreparedStatement pstm = connection.prepareStatement("UPDATE Customer SET customerName=?, address=?, salary=? WHERE customerId=?");
+            customerBO.updateCustomer(connection, new CustomerDTO(cusId, cusName, cusAddress, cusSalary));
 
-            pstm.setString(1, cusName);
-            pstm.setString(2, cusAddress);
-            pstm.setString(3, cusSalary);
-            pstm.setString(4, cusId);
-            boolean b = pstm.executeUpdate() > 0;
+            resp.setStatus(200);
+            resp.getWriter().print(messageUtil.buildJsonObject("OK", "Successfully Updated", "").build());
 
-            if (b) {
-                JsonObjectBuilder obj = Json.createObjectBuilder();
+        } catch (SQLException | ClassNotFoundException e) {
 
-                obj.add("state", "OK");
-                obj.add("message", "Successfully Updated");
-                obj.add("data", "");
-                resp.setStatus(200);
-
-                resp.getWriter().print(obj.build());
-            } else {
-                throw new SQLException("No Such Customer ID");
-            }
-
-        } catch (SQLException e) {
-            JsonObjectBuilder obj = Json.createObjectBuilder();
-
-            obj.add("state", "Error");
-            obj.add("message", e.getLocalizedMessage());
-            obj.add("data", "");
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().print(messageUtil.buildJsonObject("Error", e.getLocalizedMessage(), "").build());
 
-            resp.getWriter().print(obj.build());
         }
 
     }
