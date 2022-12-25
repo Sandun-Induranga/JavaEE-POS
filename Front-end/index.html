@@ -253,7 +253,7 @@
             console.log(id)
 
             $.ajax({
-                url: "http://localhost:8080/App_05/" + "customer?cusId=" + id.trim(),
+                url: baseUrl + "customer?cusId=" + id.trim(),
                 method: "delete",
                 dataType: "json",
                 success: function (res) {

@@ -92,47 +92,29 @@ public class CustomerServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
         try (Connection connection = dataSource.getConnection()) {
 
             String cusId = req.getParameter("cusId");
 
-            PreparedStatement pstm = connection.prepareStatement("DELETE FROM Customer WHERE customerId=?");
+            customerBO.deleteCustomer(connection, cusId);
 
-            pstm.setString(1, cusId);
-            boolean b = pstm.executeUpdate() > 0;
+            resp.setStatus(200);
+            resp.getWriter().print(messageUtil.buildJsonObject("OK", "Successfully Loaded", "").build());
 
-            if (b) {
+        } catch (SQLException | ClassNotFoundException e) {
 
-                JsonObjectBuilder obj = Json.createObjectBuilder();
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().print(messageUtil.buildJsonObject("Error", e.getLocalizedMessage(), "").build());
 
-                obj.add("state", "OK");
-                obj.add("message", "Successfully Deleted");
-                obj.add("data", "");
-                resp.setStatus(200);
-
-                resp.getWriter().print(obj.build());
-
-            } else {
-                throw new SQLException("No Such Customer ID");
-            }
-
-        } catch (SQLException e) {
-            JsonObjectBuilder obj = Json.createObjectBuilder();
-
-            obj.add("state", "Error");
-            obj.add("message", e.getLocalizedMessage());
-            obj.add("data", "");
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);  // 500 // Server Side Errors
-
-            resp.getWriter().print(obj.build());
         }
+
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        JsonReader reader = Json.createReader(req.getReader());
-        JsonObject customer = reader.readObject();
+        JsonObject customer = Json.createReader(req.getReader()).readObject();
 
         String cusId = customer.getString("id");
         String cusName = customer.getString("name");
