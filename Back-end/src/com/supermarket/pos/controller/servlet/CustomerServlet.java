@@ -38,18 +38,9 @@ public class CustomerServlet extends HttpServlet {
         String cusAddress = req.getParameter("cusAddress");
         double cusSalary = Double.parseDouble(req.getParameter("cusSalary"));
 
-
         try (Connection connection = dataSource.getConnection()) {
 
-            PreparedStatement pstm = connection.prepareStatement("INSERT INTO Customer VALUES (?,?,?,?)");
-
-            pstm.setString(1, cusId);
-            pstm.setString(2, cusName);
-            pstm.setString(3, cusAddress);
-            pstm.setDouble(4, cusSalary);
-            boolean b = pstm.executeUpdate() > 0;
-
-            if (b) {
+            customerBO.saveCustomer(connection, new CustomerDTO(cusId, cusName, cusAddress, cusSalary));
 
                 JsonObjectBuilder obj = Json.createObjectBuilder();
 
@@ -60,8 +51,6 @@ public class CustomerServlet extends HttpServlet {
 
                 resp.getWriter().print(obj.build());
 
-            }
-
         } catch (SQLException e) {
             JsonObjectBuilder obj = Json.createObjectBuilder();
 
@@ -71,6 +60,8 @@ public class CustomerServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
             resp.getWriter().print(obj.build());
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 
