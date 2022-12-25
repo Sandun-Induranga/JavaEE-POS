@@ -1,11 +1,13 @@
 package com.supermarket.pos.controller.servlet;
 
+import javax.annotation.Resource;
 import javax.json.*;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.*;
 
@@ -16,6 +18,10 @@ import java.sql.*;
 
 @WebServlet(urlPatterns = "/item")
 public class ItemServlet extends HttpServlet {
+
+    @Resource(name = "java:comp/env/jdbc/pool")
+    DataSource dataSource;
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -24,9 +30,9 @@ public class ItemServlet extends HttpServlet {
         int qty = Integer.parseInt(req.getParameter("qtyOnHand"));
         double price = Double.parseDouble(req.getParameter("price"));
 
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/POS", "sandu", "1234");
+        try (Connection connection = dataSource.getConnection()){
+//            Class.forName("com.mysql.jdbc.Driver");
+//            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/POS", "sandu", "1234");
 
             PreparedStatement pstm = connection.prepareStatement("INSERT INTO Item VALUES (?,?,?,?)");
 
@@ -49,16 +55,16 @@ public class ItemServlet extends HttpServlet {
 
             }
 
-        } catch (ClassNotFoundException e) {
-
-            JsonObjectBuilder obj = Json.createObjectBuilder();
-
-            obj.add("state", "Error");
-            obj.add("message", e.getLocalizedMessage());
-            obj.add("data", "");
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-
-            resp.getWriter().print(obj.build());
+//        } catch (ClassNotFoundException e) {
+//
+//            JsonObjectBuilder obj = Json.createObjectBuilder();
+//
+//            obj.add("state", "Error");
+//            obj.add("message", e.getLocalizedMessage());
+//            obj.add("data", "");
+//            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+//
+//            resp.getWriter().print(obj.build());
 
         } catch (SQLException e) {
             JsonObjectBuilder obj = Json.createObjectBuilder();
@@ -77,10 +83,10 @@ public class ItemServlet extends HttpServlet {
 
         JsonArrayBuilder allItems = Json.createArrayBuilder();
 
-        try {
+        try (Connection connection = dataSource.getConnection()){
 
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/POS", "sandu", "1234");
+//            Class.forName("com.mysql.jdbc.Driver");
+//            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/POS", "sandu", "1234");
             PreparedStatement pstm = connection.prepareStatement("SELECT * FROM Item");
             ResultSet resultSet = pstm.executeQuery();
 
@@ -105,16 +111,16 @@ public class ItemServlet extends HttpServlet {
             resp.setStatus(200);
 
             resp.getWriter().print(obj.build());
-
-        } catch (ClassNotFoundException e) {
-            JsonObjectBuilder obj = Json.createObjectBuilder();
-
-            obj.add("state", "Error");
-            obj.add("message", e.getLocalizedMessage());
-            obj.add("data", "");
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-
-            resp.getWriter().print(obj.build());
+//
+//        } catch (ClassNotFoundException e) {
+//            JsonObjectBuilder obj = Json.createObjectBuilder();
+//
+//            obj.add("state", "Error");
+//            obj.add("message", e.getLocalizedMessage());
+//            obj.add("data", "");
+//            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+//
+//            resp.getWriter().print(obj.build());
         } catch (SQLException e) {
             JsonObjectBuilder obj = Json.createObjectBuilder();
 
@@ -130,12 +136,12 @@ public class ItemServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try {
+        try (Connection connection = dataSource.getConnection()){
 
             String code = req.getParameter("code");
 
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/POS", "sandu", "1234");
+//            Class.forName("com.mysql.jdbc.Driver");
+//            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/POS", "sandu", "1234");
             PreparedStatement pstm = connection.prepareStatement("DELETE FROM Item WHERE code=?");
 
             pstm.setString(1, code);
@@ -156,15 +162,15 @@ public class ItemServlet extends HttpServlet {
                 throw new SQLException("No Such Item Code");
             }
 
-        } catch (ClassNotFoundException e) {
-            JsonObjectBuilder obj = Json.createObjectBuilder();
-
-            obj.add("state", "Error");
-            obj.add("message", e.getLocalizedMessage());
-            obj.add("data", "");
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-
-            resp.getWriter().print(obj.build());
+//        } catch (ClassNotFoundException e) {
+//            JsonObjectBuilder obj = Json.createObjectBuilder();
+//
+//            obj.add("state", "Error");
+//            obj.add("message", e.getLocalizedMessage());
+//            obj.add("data", "");
+//            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+//
+//            resp.getWriter().print(obj.build());
         } catch (SQLException e) {
             JsonObjectBuilder obj = Json.createObjectBuilder();
 
@@ -189,10 +195,10 @@ public class ItemServlet extends HttpServlet {
         int qty = item.getInt("qtyOnHand");
         String price = item.getString("price");
 
-        try {
+        try (Connection connection = dataSource.getConnection()){
 
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/POS", "sandu", "1234");
+//            Class.forName("com.mysql.jdbc.Driver");
+//            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/POS", "sandu", "1234");
             PreparedStatement pstm = connection.prepareStatement("UPDATE Item SET name=?, qty=?, price=? WHERE code=?");
 
             pstm.setString(1, name);
@@ -212,15 +218,15 @@ public class ItemServlet extends HttpServlet {
             } else {
                 throw new SQLException("No Such Customer ID");
             }
-        } catch (ClassNotFoundException e) {
-            JsonObjectBuilder obj = Json.createObjectBuilder();
-
-            obj.add("state", "Error");
-            obj.add("message", e.getLocalizedMessage());
-            obj.add("data", "");
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-
-            resp.getWriter().print(obj.build());
+//        } catch (ClassNotFoundException e) {
+//            JsonObjectBuilder obj = Json.createObjectBuilder();
+//
+//            obj.add("state", "Error");
+//            obj.add("message", e.getLocalizedMessage());
+//            obj.add("data", "");
+//            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+//
+//            resp.getWriter().print(obj.build());
         } catch (SQLException e) {
             JsonObjectBuilder obj = Json.createObjectBuilder();
 

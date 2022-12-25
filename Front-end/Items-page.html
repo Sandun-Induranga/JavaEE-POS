@@ -180,8 +180,9 @@
 
 <script>
 
+    const baseUrl = "http://localhost:8080/backend/";
+
     loadAllItems();
-    const baseUrl = "http://localhost:8080/App_05/";
 
     $("#btnSave").on("click", function () {
         let formData = $("#itemForm").serialize();
@@ -285,10 +286,9 @@
     });
 
     function loadAllItems() {
-        const baseUrl = "http://localhost:8080/App_05/";
         $.ajax({
             url: baseUrl + "item",
-            type: "get",
+            method: "get",
             dataType: "json",
             success: function (res) {
                 $("#body").empty();
