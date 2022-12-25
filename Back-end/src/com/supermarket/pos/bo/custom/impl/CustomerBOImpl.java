@@ -1,6 +1,7 @@
-package com.supermarket.pos.bo.custom;
+package com.supermarket.pos.bo.custom.impl;
 
 import com.supermarket.pos.bo.SuperBO;
+import com.supermarket.pos.bo.custom.CustomerBO;
 import com.supermarket.pos.dao.DAOFactory;
 import com.supermarket.pos.dao.custom.CustomerDAO;
 import com.supermarket.pos.dto.CustomerDTO;

@@ -1,6 +1,6 @@
 package com.supermarket.pos.bo;
 
-import com.supermarket.pos.bo.custom.CustomerBOImpl;
+import com.supermarket.pos.bo.custom.impl.CustomerBOImpl;
 
 /**
  * @author : Sandun Induranga

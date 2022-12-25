@@ -84,9 +84,6 @@ public class CustomerServlet extends HttpServlet {
 
             ArrayList<CustomerDTO> all = customerBO.getAllCustomers(connection);
 
-//            PreparedStatement pstm = connection.prepareStatement("SELECT * FROM Customer");
-//            ResultSet resultSet = pstm.executeQuery();
-
             for (CustomerDTO customerDTO : all) {
 
                 JsonObjectBuilder customer = Json.createObjectBuilder();
@@ -99,19 +96,6 @@ public class CustomerServlet extends HttpServlet {
                 allCustomers.add(customer.build());
 
             }
-//
-//            while (resultSet.next()) {
-//
-//                JsonObjectBuilder customer = Json.createObjectBuilder();
-//
-//                customer.add("id", resultSet.getString(1));
-//                customer.add("name", resultSet.getString(2));
-//                customer.add("address", resultSet.getString(3));
-//                customer.add("salary", resultSet.getDouble(4));
-//
-//                allCustomers.add(customer.build());
-//
-//            }
 
             JsonObjectBuilder obj = Json.createObjectBuilder();
 
