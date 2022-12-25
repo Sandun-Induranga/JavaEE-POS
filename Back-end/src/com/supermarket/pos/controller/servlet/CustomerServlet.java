@@ -4,6 +4,7 @@ import com.supermarket.pos.bo.BOFactory;
 import com.supermarket.pos.bo.SuperBO;
 import com.supermarket.pos.bo.custom.CustomerBO;
 import com.supermarket.pos.dto.CustomerDTO;
+import com.supermarket.pos.util.MessageUtil;
 
 import javax.annotation.Resource;
 import javax.json.*;
@@ -29,6 +30,7 @@ public class CustomerServlet extends HttpServlet {
     DataSource dataSource;
 
     private final CustomerBO customerBO = (CustomerBO) BOFactory.getInstance().getBO(BOFactory.BOTypes.CUSTOMER);
+    private final MessageUtil messageUtil = new MessageUtil();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -42,24 +44,14 @@ public class CustomerServlet extends HttpServlet {
 
             customerBO.saveCustomer(connection, new CustomerDTO(cusId, cusName, cusAddress, cusSalary));
 
-                JsonObjectBuilder obj = Json.createObjectBuilder();
-
-                obj.add("state", "OK");
-                obj.add("message", "Successfully Added");
-                obj.add("data", "");
-                resp.setStatus(200);
-
-                resp.getWriter().print(obj.build());
+            resp.setStatus(200);
+            resp.getWriter().print(messageUtil.buildJsonObject("OK", "Successfully Added", "").build());
 
         } catch (SQLException e) {
-            JsonObjectBuilder obj = Json.createObjectBuilder();
 
-            obj.add("state", "Error");
-            obj.add("message", e.getLocalizedMessage());
-            obj.add("data", "");
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().print(messageUtil.buildJsonObject("Error", e.getLocalizedMessage(), "").build());
 
-            resp.getWriter().print(obj.build());
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -81,31 +73,21 @@ public class CustomerServlet extends HttpServlet {
 
                 customer.add("id", customerDTO.getCusId());
                 customer.add("name", customerDTO.getCusName());
-                customer.add("address",customerDTO.getAddress());
+                customer.add("address", customerDTO.getAddress());
                 customer.add("salary", customerDTO.getSalary());
 
                 allCustomers.add(customer.build());
 
             }
 
-            JsonObjectBuilder obj = Json.createObjectBuilder();
-
-            obj.add("state", "OK");
-            obj.add("message", "Successfully Loaded..!");
-            obj.add("data", allCustomers);
             resp.setStatus(200);
-
-            resp.getWriter().print(obj.build());
+            resp.getWriter().print(messageUtil.buildJsonObject("OK", "Successfully Loaded", allCustomers).build());
 
         } catch (SQLException | ClassNotFoundException e) {
-            JsonObjectBuilder obj = Json.createObjectBuilder();
 
-            obj.add("state", "Error");
-            obj.add("message", e.getLocalizedMessage());
-            obj.add("data", "");
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().print(messageUtil.buildJsonObject("Error", e.getLocalizedMessage(), "").build());
 
-            resp.getWriter().print(obj.build());
         }
 
     }
@@ -169,8 +151,6 @@ public class CustomerServlet extends HttpServlet {
             pstm.setString(3, cusSalary);
             pstm.setString(4, cusId);
             boolean b = pstm.executeUpdate() > 0;
-
-            connection.close();
 
             if (b) {
                 JsonObjectBuilder obj = Json.createObjectBuilder();
