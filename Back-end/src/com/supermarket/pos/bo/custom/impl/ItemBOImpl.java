@@ -37,8 +37,8 @@ public class ItemBOImpl implements ItemBO, SuperBO {
     }
 
     @Override
-    public void saveItem(Connection connection, ItemDTO itemDTO) throws SQLException, ClassNotFoundException {
-
+    public void saveItem(Connection connection, ItemDTO item) throws SQLException, ClassNotFoundException {
+        itemDAO.save(connection, new Item(item.getCode(), item.getName(), item.getQtyOnHand(), item.getPrice()))
     }
 
     @Override
