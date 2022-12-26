@@ -43,7 +43,7 @@ public class ItemBOImpl implements ItemBO, SuperBO {
 
     @Override
     public boolean updateItem(Connection connection, ItemDTO itemDTO) throws SQLException, ClassNotFoundException {
-
+        return false;
     }
 
     @Override

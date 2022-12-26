@@ -26,8 +26,8 @@ public class ItemDAOImpl implements ItemDAO {
     }
 
     @Override
-    public boolean save(Connection connection, Item dto) throws SQLException, ClassNotFoundException {
-        return false;
+    public boolean save(Connection connection, Item entity) throws SQLException, ClassNotFoundException {
+        return SQLUtil.executeUpdate(connection, "INSERT INTO Item VALUES (?,?,?,?)", entity.getCode(), entity.getName(), entity.getQty(), entity.getPrice());
     }
 
     @Override
