@@ -3,6 +3,7 @@ package com.supermarket.pos.controller.servlet;
 import com.supermarket.pos.bo.BOFactory;
 import com.supermarket.pos.bo.custom.ItemBO;
 import com.supermarket.pos.dto.ItemDTO;
+import com.supermarket.pos.util.MessageUtil;
 
 import javax.annotation.Resource;
 import javax.json.*;
@@ -28,6 +29,7 @@ public class ItemServlet extends HttpServlet {
     DataSource dataSource;
 
     ItemBO itemBO = (ItemBO) BOFactory.getInstance().getBO(BOFactory.BOTypes.ITEM);
+    MessageUtil messageUtil = new MessageUtil();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -92,26 +94,14 @@ public class ItemServlet extends HttpServlet {
                 allItems.add(jsonItem.build());
             }
 
-            JsonObjectBuilder obj = Json.createObjectBuilder();
-
-            obj.add("state", "OK");
-            obj.add("message", "Successfully Loaded..!");
-            obj.add("data", allItems);
             resp.setStatus(200);
+            resp.getWriter().print(messageUtil.buildJsonObject("OK","Successfully Loaded..!",allItems).build());
 
-            resp.getWriter().print(obj.build());
+        } catch (SQLException | ClassNotFoundException e) {
 
-        } catch (SQLException e) {
-            JsonObjectBuilder obj = Json.createObjectBuilder();
-
-            obj.add("state", "Error");
-            obj.add("message", e.getLocalizedMessage());
-            obj.add("data", "");
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().print(messageUtil.buildJsonObject("OK",e.getLocalizedMessage(),"").build());
 
-            resp.getWriter().print(obj.build());
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
         }
 
     }
