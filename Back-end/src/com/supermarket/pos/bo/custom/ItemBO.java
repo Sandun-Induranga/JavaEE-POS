@@ -17,9 +17,9 @@ public interface ItemBO {
 
     void deleteItems(Connection connection, String id) throws SQLException, ClassNotFoundException;
 
-    void saveItem(Connection connection, ItemDTO itemDTO) throws SQLException, ClassNotFoundException;
+    boolean saveItem(Connection connection, ItemDTO itemDTO) throws SQLException, ClassNotFoundException;
 
-    void updateItem(Connection connection, ItemDTO itemDTO) throws SQLException, ClassNotFoundException;
+    boolean updateItem(Connection connection, ItemDTO itemDTO) throws SQLException, ClassNotFoundException;
 
     boolean exitsItem(Connection connection, String id) throws SQLException, ClassNotFoundException;
 
