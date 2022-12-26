@@ -1,4 +1,4 @@
-package com.supermarket.pos.dto;
+package com.supermarket.pos.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,9 +10,9 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ItemDTO {
+public class Item {
     private String code;
     private String name;
-    private int qtyOnHand;
+    private int qty;
     private double price;
 }
