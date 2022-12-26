@@ -31,8 +31,6 @@ public class ItemServlet extends HttpServlet {
         double price = Double.parseDouble(req.getParameter("price"));
 
         try (Connection connection = dataSource.getConnection()){
-//            Class.forName("com.mysql.jdbc.Driver");
-//            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/POS", "sandu", "1234");
 
             PreparedStatement pstm = connection.prepareStatement("INSERT INTO Item VALUES (?,?,?,?)");
 
@@ -55,17 +53,6 @@ public class ItemServlet extends HttpServlet {
 
             }
 
-//        } catch (ClassNotFoundException e) {
-//
-//            JsonObjectBuilder obj = Json.createObjectBuilder();
-//
-//            obj.add("state", "Error");
-//            obj.add("message", e.getLocalizedMessage());
-//            obj.add("data", "");
-//            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-//
-//            resp.getWriter().print(obj.build());
-
         } catch (SQLException e) {
             JsonObjectBuilder obj = Json.createObjectBuilder();
 
@@ -85,8 +72,6 @@ public class ItemServlet extends HttpServlet {
 
         try (Connection connection = dataSource.getConnection()){
 
-//            Class.forName("com.mysql.jdbc.Driver");
-//            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/POS", "sandu", "1234");
             PreparedStatement pstm = connection.prepareStatement("SELECT * FROM Item");
             ResultSet resultSet = pstm.executeQuery();
 
@@ -111,16 +96,7 @@ public class ItemServlet extends HttpServlet {
             resp.setStatus(200);
 
             resp.getWriter().print(obj.build());
-//
-//        } catch (ClassNotFoundException e) {
-//            JsonObjectBuilder obj = Json.createObjectBuilder();
-//
-//            obj.add("state", "Error");
-//            obj.add("message", e.getLocalizedMessage());
-//            obj.add("data", "");
-//            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-//
-//            resp.getWriter().print(obj.build());
+
         } catch (SQLException e) {
             JsonObjectBuilder obj = Json.createObjectBuilder();
 
@@ -140,8 +116,6 @@ public class ItemServlet extends HttpServlet {
 
             String code = req.getParameter("code");
 
-//            Class.forName("com.mysql.jdbc.Driver");
-//            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/POS", "sandu", "1234");
             PreparedStatement pstm = connection.prepareStatement("DELETE FROM Item WHERE code=?");
 
             pstm.setString(1, code);
@@ -162,15 +136,6 @@ public class ItemServlet extends HttpServlet {
                 throw new SQLException("No Such Item Code");
             }
 
-//        } catch (ClassNotFoundException e) {
-//            JsonObjectBuilder obj = Json.createObjectBuilder();
-//
-//            obj.add("state", "Error");
-//            obj.add("message", e.getLocalizedMessage());
-//            obj.add("data", "");
-//            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-//
-//            resp.getWriter().print(obj.build());
         } catch (SQLException e) {
             JsonObjectBuilder obj = Json.createObjectBuilder();
 
@@ -197,8 +162,6 @@ public class ItemServlet extends HttpServlet {
 
         try (Connection connection = dataSource.getConnection()){
 
-//            Class.forName("com.mysql.jdbc.Driver");
-//            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/POS", "sandu", "1234");
             PreparedStatement pstm = connection.prepareStatement("UPDATE Item SET name=?, qty=?, price=? WHERE code=?");
 
             pstm.setString(1, name);
@@ -218,15 +181,7 @@ public class ItemServlet extends HttpServlet {
             } else {
                 throw new SQLException("No Such Customer ID");
             }
-//        } catch (ClassNotFoundException e) {
-//            JsonObjectBuilder obj = Json.createObjectBuilder();
-//
-//            obj.add("state", "Error");
-//            obj.add("message", e.getLocalizedMessage());
-//            obj.add("data", "");
-//            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-//
-//            resp.getWriter().print(obj.build());
+
         } catch (SQLException e) {
             JsonObjectBuilder obj = Json.createObjectBuilder();
 
