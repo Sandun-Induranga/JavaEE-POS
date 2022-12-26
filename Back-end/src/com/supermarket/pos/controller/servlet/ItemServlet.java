@@ -1,5 +1,9 @@
 package com.supermarket.pos.controller.servlet;
 
+import com.supermarket.pos.bo.BOFactory;
+import com.supermarket.pos.bo.custom.ItemBO;
+import com.supermarket.pos.dto.ItemDTO;
+
 import javax.annotation.Resource;
 import javax.json.*;
 import javax.servlet.ServletException;
@@ -10,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
 
 /**
  * @author : Sandun Induranga
@@ -21,6 +26,8 @@ public class ItemServlet extends HttpServlet {
 
     @Resource(name = "java:comp/env/jdbc/pool")
     DataSource dataSource;
+
+    ItemBO itemBO = (ItemBO) BOFactory.getInstance().getBO(BOFactory.BOTypes.ITEM);
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -72,20 +79,17 @@ public class ItemServlet extends HttpServlet {
 
         try (Connection connection = dataSource.getConnection()){
 
-            PreparedStatement pstm = connection.prepareStatement("SELECT * FROM Item");
-            ResultSet resultSet = pstm.executeQuery();
+            ArrayList<ItemDTO> items = itemBO.getAllItems(connection);
 
-            while (resultSet.next()) {
+            for (ItemDTO item : items) {
+                JsonObjectBuilder jsonItem = Json.createObjectBuilder();
 
-                JsonObjectBuilder item = Json.createObjectBuilder();
+                jsonItem.add("code", item.getCode());
+                jsonItem.add("name", item.getName());
+                jsonItem.add("qty", item.getQtyOnHand());
+                jsonItem.add("price", item.getPrice());
 
-                item.add("code", resultSet.getString(1));
-                item.add("name", resultSet.getString(2));
-                item.add("qty", resultSet.getInt(3));
-                item.add("price", resultSet.getDouble(4));
-
-                allItems.add(item.build());
-
+                allItems.add(jsonItem.build());
             }
 
             JsonObjectBuilder obj = Json.createObjectBuilder();
@@ -106,6 +110,8 @@ public class ItemServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
             resp.getWriter().print(obj.build());
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
 
     }
