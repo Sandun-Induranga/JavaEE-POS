@@ -1,6 +1,7 @@
 package com.supermarket.pos.dao;
 
 import com.supermarket.pos.dao.custom.impl.CustomerDAOImpl;
+import com.supermarket.pos.dao.custom.impl.ItemDAOImpl;
 
 /**
  * @author : Sandun Induranga
@@ -26,6 +27,8 @@ public class DAOFactory {
         switch (types) {
             case CUSTOMER:
                 return new CustomerDAOImpl();
+            case ITEM:
+                return new ItemDAOImpl();
             default:
                 return null;
         }

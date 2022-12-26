@@ -1,6 +1,7 @@
 package com.supermarket.pos.bo;
 
 import com.supermarket.pos.bo.custom.impl.CustomerBOImpl;
+import com.supermarket.pos.bo.custom.impl.ItemBOImpl;
 
 /**
  * @author : Sandun Induranga
@@ -25,6 +26,8 @@ public class BOFactory {
         switch (types) {
             case CUSTOMER:
                 return new CustomerBOImpl();
+            case ITEM:
+                return new ItemBOImpl();
             default:
                 return null;
         }
