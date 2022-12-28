@@ -44,14 +44,14 @@ public class ItemServlet extends HttpServlet {
             if (itemBO.saveItem(connection, new ItemDTO(code, name, qty, price))) {
 
                 resp.setStatus(200);
-                resp.getWriter().print(messageUtil.buildJsonObject("OK","Successfully Added", "").build());
+                resp.getWriter().print(messageUtil.buildJsonObject("OK", "Successfully Added", "").build());
 
             }
 
         } catch (SQLException | ClassNotFoundException e) {
 
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            resp.getWriter().print(messageUtil.buildJsonObject("Error",e.getLocalizedMessage(), "").build());
+            resp.getWriter().print(messageUtil.buildJsonObject("Error", e.getLocalizedMessage(), "").build());
 
         }
     }
@@ -139,28 +139,20 @@ public class ItemServlet extends HttpServlet {
 
         try (Connection connection = dataSource.getConnection()) {
 
-            if (itemBO.updateItem(connection, new ItemDTO(code,name,qty,price))) {
-                JsonObjectBuilder obj = Json.createObjectBuilder();
+            if (itemBO.updateItem(connection, new ItemDTO(code, name, qty, price))) {
 
-                obj.add("state", "OK");
-                obj.add("message", "Successfully Updated");
-                obj.add("data", "");
                 resp.setStatus(200);
+                resp.getWriter().print(messageUtil.buildJsonObject("OK", "Successfully Updated", "").build());
 
-                resp.getWriter().print(obj.build());
             } else {
                 throw new SQLException("No Such Customer ID");
             }
 
         } catch (SQLException | ClassNotFoundException e) {
-            JsonObjectBuilder obj = Json.createObjectBuilder();
 
-            obj.add("state", "Error");
-            obj.add("message", e.getLocalizedMessage());
-            obj.add("data", "");
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().print(messageUtil.buildJsonObject("OK", e.getLocalizedMessage(), "").build());
 
-            resp.getWriter().print(obj.build());
         }
     }
 }
