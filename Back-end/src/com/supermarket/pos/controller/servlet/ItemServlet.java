@@ -94,12 +94,7 @@ public class ItemServlet extends HttpServlet {
 
             String code = req.getParameter("code");
 
-            PreparedStatement pstm = connection.prepareStatement("DELETE FROM Item WHERE code=?");
-
-            pstm.setString(1, code);
-            boolean b = pstm.executeUpdate() > 0;
-
-            if (b) {
+            if (itemBO.deleteItems(connection, code)) {
 
                 JsonObjectBuilder obj = Json.createObjectBuilder();
 
@@ -114,7 +109,7 @@ public class ItemServlet extends HttpServlet {
                 throw new SQLException("No Such Item Code");
             }
 
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             JsonObjectBuilder obj = Json.createObjectBuilder();
 
             obj.add("state", "Error");

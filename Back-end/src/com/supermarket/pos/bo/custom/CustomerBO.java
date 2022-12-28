@@ -20,7 +20,7 @@ public interface CustomerBO {
 
     boolean exitsCustomer(Connection connection, String id) throws SQLException, ClassNotFoundException;
 
-    void deleteCustomer(Connection connection, String id) throws SQLException, ClassNotFoundException;
+    boolean deleteCustomer(Connection connection, String id) throws SQLException, ClassNotFoundException;
 
     String generateNewCustomerId(Connection connection) throws SQLException, ClassNotFoundException;
 

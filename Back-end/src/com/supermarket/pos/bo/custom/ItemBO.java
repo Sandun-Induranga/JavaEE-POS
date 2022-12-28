@@ -15,7 +15,7 @@ public interface ItemBO {
 
     ArrayList<ItemDTO> getAllItems(Connection connection) throws SQLException, ClassNotFoundException;
 
-    void deleteItems(Connection connection, String id) throws SQLException, ClassNotFoundException;
+    boolean deleteItems(Connection connection, String id) throws SQLException, ClassNotFoundException;
 
     boolean saveItem(Connection connection, ItemDTO itemDTO) throws SQLException, ClassNotFoundException;
 
