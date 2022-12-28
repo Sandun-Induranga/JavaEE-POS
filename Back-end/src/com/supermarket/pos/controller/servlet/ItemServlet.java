@@ -82,7 +82,7 @@ public class ItemServlet extends HttpServlet {
         } catch (SQLException | ClassNotFoundException e) {
 
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            resp.getWriter().print(messageUtil.buildJsonObject("OK", e.getLocalizedMessage(), "").build());
+            resp.getWriter().print(messageUtil.buildJsonObject("Error", e.getLocalizedMessage(), "").build());
 
         }
 
@@ -96,28 +96,18 @@ public class ItemServlet extends HttpServlet {
 
             if (itemBO.deleteItems(connection, code)) {
 
-                JsonObjectBuilder obj = Json.createObjectBuilder();
-
-                obj.add("state", "OK");
-                obj.add("message", "Successfully Deleted");
-                obj.add("data", "");
                 resp.setStatus(200);
-
-                resp.getWriter().print(obj.build());
+                resp.getWriter().print(messageUtil.buildJsonObject("OK", "Successfully Deleted..!", "").build());
 
             } else {
-                throw new SQLException("No Such Item Code");
+                throw new SQLException("No Such Item Code..!");
             }
 
         } catch (SQLException | ClassNotFoundException e) {
-            JsonObjectBuilder obj = Json.createObjectBuilder();
 
-            obj.add("state", "Error");
-            obj.add("message", e.getLocalizedMessage());
-            obj.add("data", "");
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().print(messageUtil.buildJsonObject("Error", e.getLocalizedMessage(), "").build());
 
-            resp.getWriter().print(obj.build());
         }
     }
 
@@ -140,13 +130,13 @@ public class ItemServlet extends HttpServlet {
                 resp.getWriter().print(messageUtil.buildJsonObject("OK", "Successfully Updated", "").build());
 
             } else {
-                throw new SQLException("No Such Customer ID");
+                throw new SQLException("No Such Item Code");
             }
 
         } catch (SQLException | ClassNotFoundException e) {
 
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            resp.getWriter().print(messageUtil.buildJsonObject("OK", e.getLocalizedMessage(), "").build());
+            resp.getWriter().print(messageUtil.buildJsonObject("Error", e.getLocalizedMessage(), "").build());
 
         }
     }
