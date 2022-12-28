@@ -130,24 +130,16 @@ public class ItemServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         JsonReader reader = Json.createReader(req.getReader());
-
         JsonObject item = reader.readObject();
 
         String code = item.getString("code");
         String name = item.getString("itemName");
         int qty = item.getInt("qtyOnHand");
-        String price = item.getString("price");
+        double price = Double.parseDouble(item.getString("price"));
 
         try (Connection connection = dataSource.getConnection()) {
 
-            PreparedStatement pstm = connection.prepareStatement("UPDATE Item SET name=?, qty=?, price=? WHERE code=?");
-
-            pstm.setString(1, name);
-            pstm.setInt(2, qty);
-            pstm.setString(3, price);
-            pstm.setString(4, code);
-            boolean b = pstm.executeUpdate() > 0;
-            if (b) {
+            if (itemBO.updateItem(connection, new ItemDTO(code,name,qty,price))) {
                 JsonObjectBuilder obj = Json.createObjectBuilder();
 
                 obj.add("state", "OK");
@@ -160,7 +152,7 @@ public class ItemServlet extends HttpServlet {
                 throw new SQLException("No Such Customer ID");
             }
 
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             JsonObjectBuilder obj = Json.createObjectBuilder();
 
             obj.add("state", "Error");
