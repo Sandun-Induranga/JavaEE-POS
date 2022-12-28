@@ -39,38 +39,20 @@ public class ItemServlet extends HttpServlet {
         int qty = Integer.parseInt(req.getParameter("qtyOnHand"));
         double price = Double.parseDouble(req.getParameter("price"));
 
-        try (Connection connection = dataSource.getConnection()){
+        try (Connection connection = dataSource.getConnection()) {
 
-            PreparedStatement pstm = connection.prepareStatement("INSERT INTO Item VALUES (?,?,?,?)");
+            if (itemBO.saveItem(connection, new ItemDTO(code, name, qty, price))) {
 
-            pstm.setString(1, code);
-            pstm.setString(2, name);
-            pstm.setInt(3, qty);
-            pstm.setDouble(4, price);
-            boolean b = pstm.executeUpdate() > 0;
-
-            if (b) {
-
-                JsonObjectBuilder obj = Json.createObjectBuilder();
-
-                obj.add("state", "OK");
-                obj.add("message", "Successfully Added");
-                obj.add("data", "");
                 resp.setStatus(200);
-
-                resp.getWriter().print(obj.build());
+                resp.getWriter().print(messageUtil.buildJsonObject("OK","Successfully Added", "").build());
 
             }
 
-        } catch (SQLException e) {
-            JsonObjectBuilder obj = Json.createObjectBuilder();
+        } catch (SQLException | ClassNotFoundException e) {
 
-            obj.add("state", "Error");
-            obj.add("message", e.getLocalizedMessage());
-            obj.add("data", "");
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().print(messageUtil.buildJsonObject("Error",e.getLocalizedMessage(), "").build());
 
-            resp.getWriter().print(obj.build());
         }
     }
 
@@ -79,7 +61,7 @@ public class ItemServlet extends HttpServlet {
 
         JsonArrayBuilder allItems = Json.createArrayBuilder();
 
-        try (Connection connection = dataSource.getConnection()){
+        try (Connection connection = dataSource.getConnection()) {
 
             ArrayList<ItemDTO> items = itemBO.getAllItems(connection);
 
@@ -95,12 +77,12 @@ public class ItemServlet extends HttpServlet {
             }
 
             resp.setStatus(200);
-            resp.getWriter().print(messageUtil.buildJsonObject("OK","Successfully Loaded..!",allItems).build());
+            resp.getWriter().print(messageUtil.buildJsonObject("OK", "Successfully Loaded..!", allItems).build());
 
         } catch (SQLException | ClassNotFoundException e) {
 
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            resp.getWriter().print(messageUtil.buildJsonObject("OK",e.getLocalizedMessage(),"").build());
+            resp.getWriter().print(messageUtil.buildJsonObject("OK", e.getLocalizedMessage(), "").build());
 
         }
 
@@ -108,7 +90,7 @@ public class ItemServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try (Connection connection = dataSource.getConnection()){
+        try (Connection connection = dataSource.getConnection()) {
 
             String code = req.getParameter("code");
 
@@ -156,7 +138,7 @@ public class ItemServlet extends HttpServlet {
         int qty = item.getInt("qtyOnHand");
         String price = item.getString("price");
 
-        try (Connection connection = dataSource.getConnection()){
+        try (Connection connection = dataSource.getConnection()) {
 
             PreparedStatement pstm = connection.prepareStatement("UPDATE Item SET name=?, qty=?, price=? WHERE code=?");
 
