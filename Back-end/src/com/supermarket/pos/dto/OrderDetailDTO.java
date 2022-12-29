@@ -3,8 +3,6 @@ package com.supermarket.pos.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.List;
-
 /**
  * @author : Sandun Induranga
  * @since : 0.1.0
@@ -12,10 +10,9 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class OrderDTO {
+public class OrderDetailDTO {
     private String orderId;
-    private String cusId;
-    private double cost;
-    private String orderDate;
-    private List<OrderDetailDTO> orderDetails;
+    private String itemCode;
+    private double price;
+    private int qty;
 }
