@@ -32,23 +32,33 @@ public class PurchaseOrderBOImpl implements PurchaseOrderBO {
     public boolean purchaseOrder(Connection connection, OrderDTO order) throws SQLException, ClassNotFoundException {
         connection.setAutoCommit(false);
 
-        if (orderDAO.save(connection, new Order(order.getOrderId(), order.getCusId(), order.getCost(), order.getOrderDate()))) {
+        if (!orderDAO.save(connection, new Order(order.getOrderId(), order.getCusId(), order.getCost(), order.getOrderDate()))) {
             connection.rollback();
             connection.setAutoCommit(true);
             return false;
         }
 
         for (OrderDetailDTO detailDTO : order.getOrderDetails()) {
-            if (orderDetailDAO.save(connection, new OrderDetail(detailDTO.getOrderId(),detailDTO.getItemCode(),detailDTO.getPrice(),detailDTO.getQty()))) {
+            if (!orderDetailDAO.save(connection, new OrderDetail(detailDTO.getOrderId(), detailDTO.getItemCode(), detailDTO.getPrice(), detailDTO.getQty()))) {
                 connection.rollback();
                 connection.setAutoCommit(true);
                 return false;
             }
 
             ItemDTO item = searchItem(connection, detailDTO.getItemCode());
-            item.setQtyOnHand(item.getQtyOnHand()- detailDTO.getQty());
+            item.setQtyOnHand(item.getQtyOnHand() - detailDTO.getQty());
+
+            if (!itemDAO.update(connection, new Item(item.getCode(), item.getName(), item.getQtyOnHand(), item.getPrice()))) {
+                connection.rollback();
+                connection.setAutoCommit(true);
+                return false;
+            }
 
         }
+
+        connection.commit();
+        connection.setAutoCommit(true);
+        return true;
 
     }
 
