@@ -12,6 +12,7 @@ import java.util.ArrayList;
  * @author : Sandun Induranga
  * @since : 0.1.0
  **/
+
 public class OrderDetailDAOImpl implements OrderDetailDAO {
     @Override
     public ArrayList<OrderDetail> getAll(Connection connection) throws SQLException, ClassNotFoundException {
