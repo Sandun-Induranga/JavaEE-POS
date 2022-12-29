@@ -45,7 +45,8 @@ public class PurchaseOrderBOImpl implements PurchaseOrderBO {
                 return false;
             }
 
-            searchItem()
+            ItemDTO item = searchItem(connection, detailDTO.getItemCode());
+            item.setQtyOnHand(item.getQtyOnHand()- detailDTO.getQty());
 
         }
 
