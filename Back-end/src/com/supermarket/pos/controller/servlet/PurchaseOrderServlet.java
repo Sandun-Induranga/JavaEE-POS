@@ -1,5 +1,8 @@
 package com.supermarket.pos.controller.servlet;
 
+import com.supermarket.pos.bo.BOFactory;
+import com.supermarket.pos.bo.custom.PurchaseOrderBO;
+import com.supermarket.pos.dto.OrderDTO;
 import com.supermarket.pos.dto.OrderDetailDTO;
 
 import javax.annotation.Resource;
@@ -12,7 +15,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,6 +30,8 @@ public class PurchaseOrderServlet extends HttpServlet {
 
     @Resource(name = "java:comp/env/jdbc/pool")
     DataSource dataSource;
+
+    PurchaseOrderBO purchaseOrderBO = (PurchaseOrderBO) BOFactory.getInstance().getBO(BOFactory.BOTypes.ORDER);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -107,46 +114,46 @@ public class PurchaseOrderServlet extends HttpServlet {
 
         JsonObject details = reader.readObject();
         String cusId = details.getString("cusId");
-        String total = details.getString("total");
+        double total = Double.parseDouble(details.getString("total"));
 
         JsonArray items = details.getJsonArray("items");
         OrderDetailDTO[] objects = (OrderDetailDTO[]) items.toArray();
         List<OrderDetailDTO> orderDetails = Arrays.asList(objects);
 
-        boolean b = false;
-
         try (Connection connection = dataSource.getConnection()) {
 
             String orderId = generateNewID();
 
-            PreparedStatement pstm = connection.prepareStatement("INSERT INTO `Order` VALUES (?,?,?)");
-            pstm.setString(1, orderId);
-            pstm.setString(2, cusId);
-            pstm.setDouble(3, Double.parseDouble(total));
+            boolean b = purchaseOrderBO.purchaseOrder(connection, new OrderDTO(orderId, cusId, total, LocalDate.now().toString(), orderDetails));
 
-            pstm.executeUpdate();
+//            PreparedStatement pstm = connection.prepareStatement("INSERT INTO `Order` VALUES (?,?,?)");
+//            pstm.setString(1, orderId);
+//            pstm.setString(2, cusId);
+//            pstm.setDouble(3, Double.parseDouble(total));
+//
+//            pstm.executeUpdate();
 
-            for (JsonValue item : items) {
-
-                pstm = connection.prepareStatement("INSERT INTO Order_Detail VALUES (?,?,?,?)");
-
-                JsonObject jsonObject = item.asJsonObject();
-
-                pstm.setString(1, orderId);
-                pstm.setString(2, jsonObject.getString("code"));
-                pstm.setDouble(3, Double.parseDouble(jsonObject.getString("unitPrice")));
-                pstm.setInt(4, Integer.parseInt(jsonObject.getString("qty")));
-
-                pstm.executeUpdate();
-
-                pstm = connection.prepareStatement("UPDATE Item SET qty=qty-? WHERE code=?");
-
-                pstm.setInt(1, Integer.parseInt(jsonObject.getString("qty")));
-                pstm.setString(2, jsonObject.getString("code"));
-
-                b = pstm.executeUpdate() > 0;
-
-            }
+//            for (JsonValue item : items) {
+//
+//                pstm = connection.prepareStatement("INSERT INTO Order_Detail VALUES (?,?,?,?)");
+//
+//                JsonObject jsonObject = item.asJsonObject();
+//
+//                pstm.setString(1, orderId);
+//                pstm.setString(2, jsonObject.getString("code"));
+//                pstm.setDouble(3, Double.parseDouble(jsonObject.getString("unitPrice")));
+//                pstm.setInt(4, Integer.parseInt(jsonObject.getString("qty")));
+//
+//                pstm.executeUpdate();
+//
+//                pstm = connection.prepareStatement("UPDATE Item SET qty=qty-? WHERE code=?");
+//
+//                pstm.setInt(1, Integer.parseInt(jsonObject.getString("qty")));
+//                pstm.setString(2, jsonObject.getString("code"));
+//
+//                b = pstm.executeUpdate() > 0;
+//
+//            }
 
             if (b) {
 
