@@ -14,4 +14,5 @@ public class OrderDTO {
     private String orderId;
     private String cusId;
     private double cost;
+    private String orderDate;
 }

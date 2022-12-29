@@ -1,5 +1,6 @@
 package com.supermarket.pos.dao.custom.impl;
 
+import com.supermarket.pos.dao.SQLUtil;
 import com.supermarket.pos.dao.custom.OrderDAO;
 import com.supermarket.pos.entity.Order;
 
@@ -19,8 +20,8 @@ public class OrderDAOImpl implements OrderDAO {
     }
 
     @Override
-    public boolean save(Connection connection, Order dto) throws SQLException, ClassNotFoundException {
-        return false;
+    public boolean save(Connection connection, Order entity) throws SQLException, ClassNotFoundException {
+        return SQLUtil.executeUpdate(connection, "INSERT INTO `Order` VALUES (?,?,?)", entity.getOrderId(), entity.getCusId(), entity.getCost());
     }
 
     @Override

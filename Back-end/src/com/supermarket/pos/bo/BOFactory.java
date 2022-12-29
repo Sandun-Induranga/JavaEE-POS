@@ -8,6 +8,7 @@ import com.supermarket.pos.bo.custom.impl.PurchaseOrderBOImpl;
  * @author : Sandun Induranga
  * @since : 0.1.0
  **/
+
 public class BOFactory {
     private static BOFactory boFactory;
 
