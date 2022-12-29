@@ -44,9 +44,10 @@ public class PurchaseOrderBOImpl implements PurchaseOrderBO {
                 connection.setAutoCommit(true);
                 return false;
             }
-        }
 
-        itemDAO.update(new Item())
+            searchItem()
+
+        }
 
     }
 
@@ -57,7 +58,8 @@ public class PurchaseOrderBOImpl implements PurchaseOrderBO {
 
     @Override
     public ItemDTO searchItem(Connection connection, String code) throws SQLException, ClassNotFoundException {
-        return null;
+        Item item = itemDAO.search(connection, code);
+        return new ItemDTO(item.getCode(), item.getName(), item.getQty(), item.getPrice());
     }
 
     @Override
