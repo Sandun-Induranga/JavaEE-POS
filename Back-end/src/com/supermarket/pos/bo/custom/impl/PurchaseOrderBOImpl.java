@@ -2,12 +2,14 @@ package com.supermarket.pos.bo.custom.impl;
 
 import com.supermarket.pos.bo.custom.PurchaseOrderBO;
 import com.supermarket.pos.dao.DAOFactory;
+import com.supermarket.pos.dao.custom.ItemDAO;
 import com.supermarket.pos.dao.custom.OrderDAO;
 import com.supermarket.pos.dao.custom.OrderDetailDAO;
 import com.supermarket.pos.dto.CustomerDTO;
 import com.supermarket.pos.dto.ItemDTO;
 import com.supermarket.pos.dto.OrderDTO;
 import com.supermarket.pos.dto.OrderDetailDTO;
+import com.supermarket.pos.entity.Item;
 import com.supermarket.pos.entity.Order;
 import com.supermarket.pos.entity.OrderDetail;
 
@@ -24,6 +26,7 @@ public class PurchaseOrderBOImpl implements PurchaseOrderBO {
 
     private final OrderDAO orderDAO = (OrderDAO) DAOFactory.getInstance().getDAO(DAOFactory.DAOTypes.ORDER);
     private final OrderDetailDAO orderDetailDAO = (OrderDetailDAO) DAOFactory.getInstance().getDAO(DAOFactory.DAOTypes.ORDER_DETAILS);
+    private final ItemDAO itemDAO = (ItemDAO) DAOFactory.getInstance().getDAO(DAOFactory.DAOTypes.ITEM);
 
     @Override
     public boolean purchaseOrder(Connection connection, OrderDTO order) throws SQLException, ClassNotFoundException {
@@ -42,6 +45,8 @@ public class PurchaseOrderBOImpl implements PurchaseOrderBO {
                 return false;
             }
         }
+
+        itemDAO.update(new Item())
 
     }
 
