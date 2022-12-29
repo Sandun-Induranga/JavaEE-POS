@@ -5,6 +5,7 @@ import com.supermarket.pos.dto.CustomerDTO;
 import com.supermarket.pos.dto.ItemDTO;
 import com.supermarket.pos.dto.OrderDTO;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -14,19 +15,19 @@ import java.util.ArrayList;
  **/
 
 public interface PurchaseOrderBO extends SuperBO {
-    boolean purchaseOrder(OrderDTO dto) throws SQLException, ClassNotFoundException;
+    boolean purchaseOrder(Connection connection, OrderDTO dto) throws SQLException, ClassNotFoundException;
 
-    CustomerDTO searchCustomer(String id) throws SQLException, ClassNotFoundException;
+    CustomerDTO searchCustomer(Connection connection, String id) throws SQLException, ClassNotFoundException;
 
-    ItemDTO searchItem(String code) throws SQLException, ClassNotFoundException;
+    ItemDTO searchItem(Connection connection, String code) throws SQLException, ClassNotFoundException;
 
-    boolean checkItemIsAvailable(String code) throws SQLException, ClassNotFoundException;
+    boolean checkItemIsAvailable(Connection connection, String code) throws SQLException, ClassNotFoundException;
 
-    boolean checkCustomerIsAvailable(String id) throws SQLException, ClassNotFoundException;
+    boolean checkCustomerIsAvailable(Connection connection, String id) throws SQLException, ClassNotFoundException;
 
-    String generateNewOrderID() throws SQLException, ClassNotFoundException;
+    String generateNewOrderID(Connection connection) throws SQLException, ClassNotFoundException;
 
-    ArrayList<CustomerDTO> getAllCustomers() throws SQLException, ClassNotFoundException;
+    ArrayList<CustomerDTO> getAllCustomers(Connection connection) throws SQLException, ClassNotFoundException;
 
-    ArrayList<ItemDTO> getAllItems() throws SQLException, ClassNotFoundException;
+    ArrayList<ItemDTO> getAllItems(Connection connection) throws SQLException, ClassNotFoundException;
 }
