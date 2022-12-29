@@ -1,5 +1,7 @@
 package com.supermarket.pos.controller.servlet;
 
+import com.supermarket.pos.dto.OrderDetailDTO;
+
 import javax.annotation.Resource;
 import javax.json.*;
 import javax.servlet.ServletException;
@@ -10,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.*;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author : Sandun Induranga
@@ -103,8 +107,11 @@ public class PurchaseOrderServlet extends HttpServlet {
 
         JsonObject details = reader.readObject();
         String cusId = details.getString("cusId");
-        JsonArray items = details.getJsonArray("items");
         String total = details.getString("total");
+
+        JsonArray items = details.getJsonArray("items");
+        OrderDetailDTO[] objects = (OrderDetailDTO[]) items.toArray();
+        List<OrderDetailDTO> orderDetails = Arrays.asList(objects);
 
         boolean b = false;
 
