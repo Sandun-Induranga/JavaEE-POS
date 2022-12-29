@@ -122,42 +122,16 @@ public class PurchaseOrderServlet extends HttpServlet {
         try (Connection connection = dataSource.getConnection()) {
 
             String orderId = generateNewID();
-
             List<OrderDetailDTO> orderDetails = new ArrayList<>();
+
             for (JsonValue item : items) {
+
                 JsonObject jsonObject = item.asJsonObject();
                 orderDetails.add(new OrderDetailDTO(orderId, jsonObject.getString("code"), Double.parseDouble(jsonObject.getString("unitPrice")), Integer.parseInt(jsonObject.getString("qty"))));
+
             }
 
             boolean b = purchaseOrderBO.purchaseOrder(connection, new OrderDTO(orderId, cusId, total, LocalDate.now().toString(), orderDetails));
-//            PreparedStatement pstm = connection.prepareStatement("INSERT INTO `Order` VALUES (?,?,?)");
-//            pstm.setString(1, orderId);
-//            pstm.setString(2, cusId);
-//            pstm.setDouble(3, Double.parseDouble(total));
-//
-//            pstm.executeUpdate();
-
-//            for (JsonValue item : items) {
-//
-//                pstm = connection.prepareStatement("INSERT INTO Order_Detail VALUES (?,?,?,?)");
-//
-//                JsonObject jsonObject = item.asJsonObject();
-//
-//                pstm.setString(1, orderId);
-//                pstm.setString(2, jsonObject.getString("code"));
-//                pstm.setDouble(3, Double.parseDouble(jsonObject.getString("unitPrice")));
-//                pstm.setInt(4, Integer.parseInt(jsonObject.getString("qty")));
-//
-//                pstm.executeUpdate();
-//
-//                pstm = connection.prepareStatement("UPDATE Item SET qty=qty-? WHERE code=?");
-//
-//                pstm.setInt(1, Integer.parseInt(jsonObject.getString("qty")));
-//                pstm.setString(2, jsonObject.getString("code"));
-//
-//                b = pstm.executeUpdate() > 0;
-//
-//            }
 
             if (b) {
 
