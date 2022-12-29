@@ -16,6 +16,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -115,17 +116,20 @@ public class PurchaseOrderServlet extends HttpServlet {
         JsonObject details = reader.readObject();
         String cusId = details.getString("cusId");
         double total = Double.parseDouble(details.getString("total"));
-
         JsonArray items = details.getJsonArray("items");
-        OrderDetailDTO[] objects = (OrderDetailDTO[]) items.toArray();
-        List<OrderDetailDTO> orderDetails = Arrays.asList(objects);
+
 
         try (Connection connection = dataSource.getConnection()) {
 
             String orderId = generateNewID();
 
-            boolean b = purchaseOrderBO.purchaseOrder(connection, new OrderDTO(orderId, cusId, total, LocalDate.now().toString(), orderDetails));
+            List<OrderDetailDTO> orderDetails = new ArrayList<>();
+            for (JsonValue item : items) {
+                JsonObject jsonObject = item.asJsonObject();
+                orderDetails.add(new OrderDetailDTO(orderId, jsonObject.getString("code"), Double.parseDouble(jsonObject.getString("unitPrice")), Integer.parseInt(jsonObject.getString("qty"))));
+            }
 
+            boolean b = purchaseOrderBO.purchaseOrder(connection, new OrderDTO(orderId, cusId, total, LocalDate.now().toString(), orderDetails));
 //            PreparedStatement pstm = connection.prepareStatement("INSERT INTO `Order` VALUES (?,?,?)");
 //            pstm.setString(1, orderId);
 //            pstm.setString(2, cusId);

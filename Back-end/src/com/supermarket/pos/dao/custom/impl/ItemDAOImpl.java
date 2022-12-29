@@ -32,12 +32,12 @@ public class ItemDAOImpl implements ItemDAO {
 
     @Override
     public boolean update(Connection connection, Item entity) throws SQLException, ClassNotFoundException {
-        return SQLUtil.executeUpdate(connection, "UPDATE Customer name=?, qty=?, price=? WHERE code=?", entity.getCode(), entity.getName(), entity.getQty(), entity.getPrice());
+        return SQLUtil.executeUpdate(connection, "UPDATE Item SET name=?, qty=?, price=? WHERE code=?", entity.getName(), entity.getQty(), entity.getPrice(), entity.getCode());
     }
 
     @Override
     public Item search(Connection connection, String code) throws SQLException, ClassNotFoundException {
-        ResultSet rst = SQLUtil.executeQuery(connection, "SELECT * FROM Item WHERE itemCode=?", code);
+        ResultSet rst = SQLUtil.executeQuery(connection, "SELECT * FROM Item WHERE code=?", code);
         if (rst.next()) {
             return new Item(rst.getString(1), rst.getString(2), rst.getInt(3), rst.getDouble(4));
         }
