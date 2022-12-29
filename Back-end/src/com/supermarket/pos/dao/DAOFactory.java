@@ -3,6 +3,7 @@ package com.supermarket.pos.dao;
 import com.supermarket.pos.dao.custom.impl.CustomerDAOImpl;
 import com.supermarket.pos.dao.custom.impl.ItemDAOImpl;
 import com.supermarket.pos.dao.custom.impl.OrderDAOImpl;
+import com.supermarket.pos.dao.custom.impl.OrderDetailDAOImpl;
 
 /**
  * @author : Sandun Induranga
@@ -32,6 +33,8 @@ public class DAOFactory {
                 return new ItemDAOImpl();
             case ORDER:
                 return new OrderDAOImpl();
+            case ORDER_DETAILS:
+                return new OrderDetailDAOImpl();
             default:
                 return null;
         }

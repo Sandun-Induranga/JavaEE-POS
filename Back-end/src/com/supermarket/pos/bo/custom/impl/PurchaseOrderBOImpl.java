@@ -3,10 +3,13 @@ package com.supermarket.pos.bo.custom.impl;
 import com.supermarket.pos.bo.custom.PurchaseOrderBO;
 import com.supermarket.pos.dao.DAOFactory;
 import com.supermarket.pos.dao.custom.OrderDAO;
+import com.supermarket.pos.dao.custom.OrderDetailDAO;
 import com.supermarket.pos.dto.CustomerDTO;
 import com.supermarket.pos.dto.ItemDTO;
 import com.supermarket.pos.dto.OrderDTO;
+import com.supermarket.pos.dto.OrderDetailDTO;
 import com.supermarket.pos.entity.Order;
+import com.supermarket.pos.entity.OrderDetail;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -19,7 +22,8 @@ import java.util.ArrayList;
 
 public class PurchaseOrderBOImpl implements PurchaseOrderBO {
 
-    OrderDAO orderDAO = (OrderDAO) DAOFactory.getInstance().getDAO(DAOFactory.DAOTypes.ORDER);
+    private final OrderDAO orderDAO = (OrderDAO) DAOFactory.getInstance().getDAO(DAOFactory.DAOTypes.ORDER);
+    private final OrderDetailDAO orderDetailDAO = (OrderDetailDAO) DAOFactory.getInstance().getDAO(DAOFactory.DAOTypes.ORDER_DETAILS);
 
     @Override
     public boolean purchaseOrder(Connection connection, OrderDTO order) throws SQLException, ClassNotFoundException {
@@ -29,6 +33,14 @@ public class PurchaseOrderBOImpl implements PurchaseOrderBO {
             connection.rollback();
             connection.setAutoCommit(true);
             return false;
+        }
+
+        for (OrderDetailDTO detailDTO : order.getOrderDetails()) {
+            if (orderDetailDAO.save(connection, new OrderDetail(detailDTO.getOrderId(),detailDTO.getItemCode(),detailDTO.getPrice(),detailDTO.getQty()))) {
+                connection.rollback();
+                connection.setAutoCommit(true);
+                return false;
+            }
         }
 
     }
