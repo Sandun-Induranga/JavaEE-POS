@@ -4,6 +4,7 @@ import com.supermarket.pos.bo.BOFactory;
 import com.supermarket.pos.bo.custom.PurchaseOrderBO;
 import com.supermarket.pos.dto.OrderDTO;
 import com.supermarket.pos.dto.OrderDetailDTO;
+import com.supermarket.pos.util.MessageUtil;
 
 import javax.annotation.Resource;
 import javax.json.*;
@@ -17,8 +18,6 @@ import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,7 +31,8 @@ public class PurchaseOrderServlet extends HttpServlet {
     @Resource(name = "java:comp/env/jdbc/pool")
     DataSource dataSource;
 
-    PurchaseOrderBO purchaseOrderBO = (PurchaseOrderBO) BOFactory.getInstance().getBO(BOFactory.BOTypes.ORDER);
+    private final PurchaseOrderBO purchaseOrderBO = (PurchaseOrderBO) BOFactory.getInstance().getBO(BOFactory.BOTypes.ORDER);
+    private final MessageUtil messageUtil = new MessageUtil();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -105,7 +105,6 @@ public class PurchaseOrderServlet extends HttpServlet {
             resp.getWriter().print(obj.build());
         }
 
-
     }
 
     @Override
@@ -131,42 +130,18 @@ public class PurchaseOrderServlet extends HttpServlet {
 
             }
 
-            boolean b = purchaseOrderBO.purchaseOrder(connection, new OrderDTO(orderId, cusId, total, LocalDate.now().toString(), orderDetails));
+            if (purchaseOrderBO.purchaseOrder(connection, new OrderDTO(orderId, cusId, total, LocalDate.now().toString(), orderDetails))) {
 
-            if (b) {
-
-                JsonObjectBuilder obj = Json.createObjectBuilder();
-
-                obj.add("state", "OK");
-                obj.add("message", "Order Placed");
-                obj.add("data", "");
                 resp.setStatus(200);
-
-                resp.getWriter().print(obj.build());
+                resp.getWriter().print(messageUtil.buildJsonObject("OK", "Order Placed", "").build());
 
             }
 
+        } catch (ClassNotFoundException | SQLException e) {
 
-        } catch (ClassNotFoundException e) {
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            resp.getWriter().print(messageUtil.buildJsonObject("Error", e.getLocalizedMessage(), "").build());
 
-            JsonObjectBuilder obj = Json.createObjectBuilder();
-
-            obj.add("state", "Error");
-            obj.add("message", e.getLocalizedMessage());
-            obj.add("data", "");
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);  // 500 // Server Side Errors
-
-            resp.getWriter().print(obj.build());
-
-        } catch (SQLException e) {
-            JsonObjectBuilder obj = Json.createObjectBuilder();
-
-            obj.add("state", "Error");
-            obj.add("message", e.getLocalizedMessage());
-            obj.add("data", "");
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);  // 400 // Client Side Errors
-
-            resp.getWriter().print(obj.build());
         }
 
     }
