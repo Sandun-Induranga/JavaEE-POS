@@ -85,7 +85,7 @@ public class PurchaseOrderBOImpl implements PurchaseOrderBO {
 
     @Override
     public String generateNewOrderID(Connection connection) throws SQLException, ClassNotFoundException {
-        return null;
+        return orderDAO.generateNewOrderId(connection);
     }
 
     @Override

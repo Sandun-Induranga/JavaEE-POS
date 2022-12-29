@@ -117,10 +117,9 @@ public class PurchaseOrderServlet extends HttpServlet {
         double total = Double.parseDouble(details.getString("total"));
         JsonArray items = details.getJsonArray("items");
 
-
         try (Connection connection = dataSource.getConnection()) {
 
-            String orderId = generateNewID();
+            String orderId = purchaseOrderBO.generateNewOrderID(connection);
             List<OrderDetailDTO> orderDetails = new ArrayList<>();
 
             for (JsonValue item : items) {
@@ -146,17 +145,4 @@ public class PurchaseOrderServlet extends HttpServlet {
 
     }
 
-    public String generateNewID() throws SQLException, ClassNotFoundException {
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/POS", "sandu", "1234");
-        PreparedStatement pstm = connection.prepareStatement("SELECT orderId FROM `Order` ORDER BY orderId DESC LIMIT 1;");
-        ResultSet rst = pstm.executeQuery();
-        if (rst.next()) {
-            String id = rst.getString("orderId");
-            int newCustomerId = Integer.parseInt(id.replace("O", "")) + 1;
-            return String.format("O%03d", newCustomerId);
-        } else {
-            return "O001";
-        }
-    }
 }
