@@ -4,6 +4,7 @@ import com.supermarket.pos.dao.CrudDAO;
 import com.supermarket.pos.entity.Order;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * @author : Sandun Induranga
@@ -11,4 +12,5 @@ import java.sql.Connection;
  **/
 
 public interface OrderDAO extends CrudDAO<Connection, Order, String> {
+    String generateNewOrderId(Connection connection) throws SQLException, ClassNotFoundException;
 }
