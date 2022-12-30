@@ -18,6 +18,8 @@ public class MessageUtil {
         obj.add("message", message);
         if (data instanceof JsonArrayBuilder) {
             obj.add("data", (JsonArrayBuilder) data);
+        } else if (data instanceof JsonObjectBuilder) {
+            obj.add("data", (JsonObjectBuilder) data);
         } else {
             obj.add("data", "");
         }

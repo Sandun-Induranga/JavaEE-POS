@@ -77,12 +77,8 @@ public class PurchaseOrderServlet extends HttpServlet {
                         obj.add("qty", itemDTO.getQtyOnHand());
                         obj.add("price", itemDTO.getPrice());
 
-                        obj.add("state", "OK");
-                        obj.add("message", "Successfully Loaded..!");
-                        obj.add("data", obj.build());
                         resp.setStatus(200);
-
-                        resp.getWriter().print(obj.build());
+                        resp.getWriter().print(messageUtil.buildJsonObject("OK","Successfully Loaded..!", obj.build()).build());
 
                     } else {
                         throw new SQLException("No Such Customer ID");
