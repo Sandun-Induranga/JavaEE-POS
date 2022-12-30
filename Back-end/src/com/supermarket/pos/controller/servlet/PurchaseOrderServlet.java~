@@ -43,6 +43,9 @@ public class PurchaseOrderServlet extends HttpServlet {
 
         try (Connection connection = dataSource.getConnection()) {
 
+            PreparedStatement pstm;
+            ResultSet resultSet;
+
             switch (option) {
                 case "customer":
 
@@ -67,15 +70,19 @@ public class PurchaseOrderServlet extends HttpServlet {
                     }
                     break;
                 case "item":
+                    String code = req.getParameter("code");
+                    pstm = connection.prepareStatement("SELECT * FROM Item WHERE code=?");
+                    pstm.setString(1, code);
+                    resultSet = pstm.executeQuery();
 
-                    ItemDTO itemDTO = purchaseOrderBO.searchItem(connection, req.getParameter("code"));
+                    ItemDTO itemDTO = purchaseOrderBO.searchItem(connection, code);
 
-                    if (itemDTO != null) {
+                    if (resultSet.next()) {
                         JsonObjectBuilder obj = Json.createObjectBuilder();
                         obj.add("code", itemDTO.getCode());
                         obj.add("name", itemDTO.getName());
-                        obj.add("qty", itemDTO.getQtyOnHand());
-                        obj.add("price", itemDTO.getPrice());
+                        obj.add("qty", resultSet.getInt(3));
+                        obj.add("price", resultSet.getDouble(4));
 
                         obj.add("state", "OK");
                         obj.add("message", "Successfully Loaded..!");
