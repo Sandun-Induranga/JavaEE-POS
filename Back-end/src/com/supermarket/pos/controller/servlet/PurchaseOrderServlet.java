@@ -1,7 +1,9 @@
 package com.supermarket.pos.controller.servlet;
 
 import com.supermarket.pos.bo.BOFactory;
+import com.supermarket.pos.bo.custom.CustomerBO;
 import com.supermarket.pos.bo.custom.PurchaseOrderBO;
+import com.supermarket.pos.dto.CustomerDTO;
 import com.supermarket.pos.dto.OrderDTO;
 import com.supermarket.pos.dto.OrderDetailDTO;
 import com.supermarket.pos.util.MessageUtil;
@@ -45,17 +47,15 @@ public class PurchaseOrderServlet extends HttpServlet {
 
             switch (option) {
                 case "customer":
-                    String cusId = req.getParameter("cusId");
-                    pstm = connection.prepareStatement("SELECT * FROM Customer WHERE customerId=?");
-                    pstm.setString(1, cusId);
-                    resultSet = pstm.executeQuery();
 
-                    if (resultSet.next()) {
+                    CustomerDTO customerDTO = purchaseOrderBO.searchCustomer(connection, req.getParameter("cusId"));
+
+                    if (customerDTO != null) {
                         JsonObjectBuilder obj = Json.createObjectBuilder();
-                        obj.add("cusId", resultSet.getString(1));
-                        obj.add("cusName", resultSet.getString(2));
-                        obj.add("cusAddress", resultSet.getString(3));
-                        obj.add("cusSalary", resultSet.getString(4));
+                        obj.add("cusId", customerDTO.getCusId());
+                        obj.add("cusName", customerDTO.getCusName());
+                        obj.add("cusAddress", customerDTO.getAddress());
+                        obj.add("cusSalary", customerDTO.getSalary());
 
                         obj.add("state", "OK");
                         obj.add("message", "Successfully Loaded..!");
@@ -94,7 +94,7 @@ public class PurchaseOrderServlet extends HttpServlet {
                     break;
             }
 
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             JsonObjectBuilder obj = Json.createObjectBuilder();
 
             obj.add("state", "Error");
