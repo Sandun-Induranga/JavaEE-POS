@@ -39,11 +39,10 @@ public class PurchaseOrderServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String option = req.getParameter("option");
 
         try (Connection connection = dataSource.getConnection()) {
 
-            switch (option) {
+            switch (req.getParameter("option")) {
                 case "customer":
 
                     CustomerDTO customerDTO = purchaseOrderBO.searchCustomer(connection, req.getParameter("cusId"));
@@ -55,12 +54,8 @@ public class PurchaseOrderServlet extends HttpServlet {
                         obj.add("cusAddress", customerDTO.getAddress());
                         obj.add("cusSalary", customerDTO.getSalary());
 
-                        obj.add("state", "OK");
-                        obj.add("message", "Successfully Loaded..!");
-                        obj.add("data", obj.build());
                         resp.setStatus(200);
-
-                        resp.getWriter().print(obj.build());
+                        resp.getWriter().print(messageUtil.buildJsonObject("OK", "Successfully Loaded..!", obj.build()).build());
 
                     } else {
                         throw new SQLException("No Such Customer ID");
@@ -78,7 +73,7 @@ public class PurchaseOrderServlet extends HttpServlet {
                         obj.add("price", itemDTO.getPrice());
 
                         resp.setStatus(200);
-                        resp.getWriter().print(messageUtil.buildJsonObject("OK","Successfully Loaded..!", obj.build()).build());
+                        resp.getWriter().print(messageUtil.buildJsonObject("OK", "Successfully Loaded..!", obj.build()).build());
 
                     } else {
                         throw new SQLException("No Such Customer ID");
@@ -87,14 +82,10 @@ public class PurchaseOrderServlet extends HttpServlet {
             }
 
         } catch (SQLException | ClassNotFoundException e) {
-            JsonObjectBuilder obj = Json.createObjectBuilder();
 
-            obj.add("state", "Error");
-            obj.add("message", e.getLocalizedMessage());
-            obj.add("data", "");
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().print(messageUtil.buildJsonObject("Error", e.getLocalizedMessage(), "").build());
 
-            resp.getWriter().print(obj.build());
         }
 
     }
