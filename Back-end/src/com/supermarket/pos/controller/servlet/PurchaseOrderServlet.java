@@ -1,7 +1,6 @@
 package com.supermarket.pos.controller.servlet;
 
 import com.supermarket.pos.bo.BOFactory;
-import com.supermarket.pos.bo.custom.CustomerBO;
 import com.supermarket.pos.bo.custom.PurchaseOrderBO;
 import com.supermarket.pos.dto.CustomerDTO;
 import com.supermarket.pos.dto.ItemDTO;
@@ -28,26 +27,27 @@ import java.util.List;
  * @since : 0.1.0
  **/
 
-@WebServlet("/order")
+@WebServlet(urlPatterns = "/")
 public class PurchaseOrderServlet extends HttpServlet {
 
     @Resource(name = "java:comp/env/jdbc/pool")
-    DataSource dataSource;
-
+    private DataSource dataSource;
     private final PurchaseOrderBO purchaseOrderBO = (PurchaseOrderBO) BOFactory.getInstance().getBO(BOFactory.BOTypes.ORDER);
-    private final MessageUtil messageUtil = new MessageUtil();
+    MessageUtil messageUtil = new MessageUtil();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        String option = req.getParameter("option");
         try (Connection connection = dataSource.getConnection()) {
 
-            switch (req.getParameter("option")) {
+            switch (option) {
                 case "customer":
 
                     CustomerDTO customerDTO = purchaseOrderBO.searchCustomer(connection, req.getParameter("cusId"));
 
                     if (customerDTO != null) {
+                        System.out.println("come");
                         JsonObjectBuilder obj = Json.createObjectBuilder();
                         obj.add("cusId", customerDTO.getCusId());
                         obj.add("cusName", customerDTO.getCusName());
@@ -55,7 +55,7 @@ public class PurchaseOrderServlet extends HttpServlet {
                         obj.add("cusSalary", customerDTO.getSalary());
 
                         resp.setStatus(200);
-                        resp.getWriter().print(messageUtil.buildJsonObject("OK", "Successfully Loaded..!", obj.build()).build());
+                        resp.getWriter().print(messageUtil.buildJsonObject("OK", "Successfully Loaded..!", obj).build());
 
                     } else {
                         throw new SQLException("No Such Customer ID");
@@ -73,7 +73,7 @@ public class PurchaseOrderServlet extends HttpServlet {
                         obj.add("price", itemDTO.getPrice());
 
                         resp.setStatus(200);
-                        resp.getWriter().print(messageUtil.buildJsonObject("OK", "Successfully Loaded..!", obj.build()).build());
+                        resp.getWriter().print(messageUtil.buildJsonObject("OK", "Successfully Loaded..!", obj).build());
 
                     } else {
                         throw new SQLException("No Such Customer ID");

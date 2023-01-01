@@ -23,7 +23,7 @@ public class MessageUtil {
 
         } else if (data instanceof JsonObjectBuilder) {
 
-            obj.add("data", (JsonObjectBuilder) data);
+            obj.add("data", ((JsonObjectBuilder) data).build());
 
         } else {
 

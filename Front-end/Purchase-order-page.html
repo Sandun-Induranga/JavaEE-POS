@@ -280,8 +280,9 @@
     $("#cmbCustomerId").change(function () {
         $.ajax({
             url: baseUrl + "order?option=customer&cusId=" + $("#cmbCustomerId").val(),
-            type: "get",
+            method: "get",
             dataType: "json",
+            contentType: "application/json",
             success: function (res) {
 
                 $("#cusName").val(res.data.cusName);
@@ -290,9 +291,12 @@
 
             },
             error: function (error) {
-                let parse = JSON.parse(error.responseText);
+                // let parse = JSON.parse(error.responseText);
+                // alert(parse.message);
+                console.log(error)
             }
         });
+        console.log(baseUrl)
     });
 
     $("#cmbItemCode").change(function () {
