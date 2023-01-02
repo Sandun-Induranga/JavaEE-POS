@@ -27,7 +27,7 @@ import java.util.List;
  * @since : 0.1.0
  **/
 
-@WebServlet(urlPatterns = "/")
+@WebServlet(urlPatterns = "/order")
 public class PurchaseOrderServlet extends HttpServlet {
 
     @Resource(name = "java:comp/env/jdbc/pool")
