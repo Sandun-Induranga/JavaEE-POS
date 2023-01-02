@@ -3,6 +3,7 @@ package com.supermarket.pos.bo.custom;
 import com.supermarket.pos.bo.SuperBO;
 import com.supermarket.pos.dto.OrderDetailDTO;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -12,5 +13,5 @@ import java.util.ArrayList;
  **/
 
 public interface OrderDetailBO extends SuperBO {
-    ArrayList<OrderDetailDTO> getAllOrderDetails() throws SQLException, ClassNotFoundException;
+    ArrayList<OrderDetailDTO> getAllOrderDetails(Connection connection) throws SQLException, ClassNotFoundException;
 }
