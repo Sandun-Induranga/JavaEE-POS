@@ -5,6 +5,7 @@ import com.supermarket.pos.dao.custom.OrderDetailDAO;
 import com.supermarket.pos.entity.OrderDetail;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -16,7 +17,16 @@ import java.util.ArrayList;
 public class OrderDetailDAOImpl implements OrderDetailDAO {
     @Override
     public ArrayList<OrderDetail> getAll(Connection connection) throws SQLException, ClassNotFoundException {
-        return null;
+
+        ResultSet rst = SQLUtil.executeQuery(connection, "SELECT * FROM Order_Detail");
+        ArrayList<OrderDetail> orderDetails = new ArrayList<>();
+
+        while (rst.next()) {
+            orderDetails.add(new OrderDetail(rst.getString(1), rst.getString(2),rst.getDouble(3),rst.getInt(4)));
+        }
+
+        return orderDetails;
+
     }
 
     @Override

@@ -37,7 +37,7 @@ public class OrderDetailServlet extends HttpServlet {
 
         JsonArrayBuilder allOrderDetails = Json.createArrayBuilder();
 
-        try (Connection connection = dataSource.getConnection()){
+        try (Connection connection = dataSource.getConnection()) {
 
             ArrayList<OrderDetailDTO> all = orderDetailBO.getAllOrderDetails(connection);
 

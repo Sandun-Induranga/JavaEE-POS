@@ -3,13 +3,31 @@
  * @since : 0.1.0
  **/
 
-function loadAllOrders() {
+const baseUrl = "http://localhost:8080/backend/";
+
+function loadAllOrderDetails() {
     $("#tblOrders > tbody").empty();
 
-    for (let order of ordersDB) {
-        $("#tblOrders > tbody").append(
-            `<tr><td>${order.orderId}</td><td>${order.customerId}</td><td>${order.customerName}</td><td>${order.date}</td><td>${order.total}</td><td>${order.discount}</td><td>${order.amount}</td><td><i class="bi bi-trash text-danger order-deletes"></i></td></tr>`
-        );
-    }
-    bindOrdersDeleteEvent();
+    $.ajax({
+        url: baseUrl + "order_detail",
+        type: "get",
+        dataType: "json",
+        success: function (res) {
+
+            $("#body").empty();
+
+            for (let detail of res.data) {
+                $("#body").append(`<tr><td>` + detail.orderId + `</td><td>` + detail.code + `</td><td>` + detail.price + `</td><td>` + detail.qty + `</tr>`);
+            }
+
+            alert(res.message);
+
+        },
+        error: function (error) {
+            let parse = JSON.parse(error.responseText);
+            alert(parse.message);
+        }
+    });
 }
+
+loadAllOrderDetails();
