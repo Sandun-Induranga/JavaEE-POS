@@ -2,6 +2,7 @@ package com.supermarket.pos.bo;
 
 import com.supermarket.pos.bo.custom.impl.CustomerBOImpl;
 import com.supermarket.pos.bo.custom.impl.ItemBOImpl;
+import com.supermarket.pos.bo.custom.impl.OrderDetailBOImpl;
 import com.supermarket.pos.bo.custom.impl.PurchaseOrderBOImpl;
 
 /**
@@ -32,6 +33,8 @@ public class BOFactory {
                 return new ItemBOImpl();
             case ORDER:
                 return new PurchaseOrderBOImpl();
+            case ORDER_DETAILS:
+                return new OrderDetailBOImpl();
             default:
                 return null;
         }
