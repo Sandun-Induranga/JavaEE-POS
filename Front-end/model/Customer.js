@@ -14,42 +14,38 @@ class Customer{
         this.#cusName = cusName;
         this.#cusAddress = cusAddress;
         this.#cusSalary = cusSalary;
-        this._cusId = cusId;
-        this._cusName = cusName;
-        this._cusAddress = cusAddress;
-        this._cusSalary = cusSalary;
     }
 
-    get cusId() {
-        return this._cusId;
+    getCusId() {
+        return this.#cusId;
     }
 
-    set cusId(value) {
-        this._cusId = value;
+    setCusId(value) {
+        this.#cusId = value;
     }
 
-    get cusName() {
-        return this._cusName;
+    getCusName() {
+        return this.#cusName;
     }
 
-    set cusName(value) {
-        this._cusName = value;
+    setCusName(value) {
+        this.#cusName = value;
     }
 
-    get cusAddress() {
-        return this._cusAddress;
+    getCusAddress() {
+        return this.#cusAddress;
     }
 
-    set cusAddress(value) {
-        this._cusAddress = value;
+    setCusAddress(value) {
+        this.#cusAddress = value;
     }
 
-    get cusSalary() {
-        return this._cusSalary;
+    getCusSalary() {
+        return this.#cusSalary;
     }
 
-    set cusSalary(value) {
-        this._cusSalary = value;
+    setCusSalary(value) {
+        this.#cusSalary = value;
     }
 
 }

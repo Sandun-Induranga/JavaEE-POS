@@ -10,11 +10,13 @@ loadAllCustomers();
 $("#btnSaveCustomer").on("click", function () {
     let formData = $("#customerForm ").serialize();
 
+    let customer = new Customer($("#cusId").val(), $("#cusName").val(), $("#cusAddress").val(), $("#cusSalary").val());
+
     let json = {
-        id: $("#cusId").val(),
-        name: $("#cusName").val(),
-        address: $("#cusAddress").val(),
-        cusSalary: $("#cusSalary").val()
+        id: customer.getCusId(),
+        name: customer.getCusName(),
+        address: customer.getCusAddress(),
+        cusSalary: customer.getCusSalary()
     };
 
     if ($(this).text() == "Save") {
@@ -68,7 +70,9 @@ function bindEditEvent() {
 
         var salary = $(this).parent().parent().children(":eq(3)").text();
 
-        setCustomerTextFields(id, name, address, salary);
+        let customer = new Customer(id, name, address, salary);
+
+        setCustomerTextFields(customer);
         $("#btnSaveCustomer").text("Update");
 
     });
@@ -97,11 +101,11 @@ function bindDeleteEvent() {
     });
 }
 
-function setCustomerTextFields(id, name, address, salary) {
-    $("#cusId").val(id.trim());
-    $("#cusName").val(name.trim());
-    $("#cusAddress").val(address.trim());
-    $("#cusSalary").val(salary.trim());
+function setCustomerTextFields(customer) {
+    $("#cusId").val(customer.getCusId().trim());
+    $("#cusName").val(customer.getCusName().trim());
+    $("#cusAddress").val(customer.getCusAddress().trim());
+    $("#cusSalary").val(customer.getCusSalary().trim());
 }
 
 $("#btnGetAll").on("click", function () {
@@ -110,7 +114,7 @@ $("#btnGetAll").on("click", function () {
 
 function loadAllCustomers() {
     $.ajax({
-        url: baseUrl +"customer",
+        url: baseUrl + "customer",
         type: "get",
         dataType: "json",
         success: function (res) {
