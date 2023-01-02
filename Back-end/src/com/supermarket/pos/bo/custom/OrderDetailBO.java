@@ -11,7 +11,5 @@ import java.util.ArrayList;
  * @since : 0.1.0
  **/
 public interface OrderDetailBO extends SuperBO {
-
-    ArrayList<OrderDetailDTO> getAllOrderDetails(String orderID) throws SQLException, ClassNotFoundException;
-
+    ArrayList<OrderDetailDTO> getAllOrderDetails() throws SQLException, ClassNotFoundException;
 }
