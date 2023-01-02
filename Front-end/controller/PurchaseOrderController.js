@@ -220,7 +220,8 @@ $("#btnPlaceOrder").on("click", function () {
         dataType: "json",
         success: function (res) {
             alert(res.message);
-            console.log(json)           },
+            console.log(json)
+        },
         error: function (error) {
             let parse = JSON.parse(error.responseText);
             alert(parse.message);
