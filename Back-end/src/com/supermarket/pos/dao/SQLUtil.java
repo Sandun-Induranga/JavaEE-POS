@@ -9,6 +9,7 @@ import java.sql.SQLException;
  * @author : Sandun Induranga
  * @since : 0.1.0
  **/
+
 public class SQLUtil {
     private static PreparedStatement getPreparedStatement(Connection connection, String sql, Object... params) throws SQLException, ClassNotFoundException {
         PreparedStatement pStm = connection.prepareStatement(sql);

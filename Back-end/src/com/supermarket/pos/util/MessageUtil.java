@@ -3,7 +3,6 @@ package com.supermarket.pos.util;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
-import javax.json.JsonValue;
 
 /**
  * @author : Sandun Induranga
