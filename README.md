@@ -1,5 +1,5 @@
 # JavaEE-POS
-Full-stack Application
+Fullstack Application
 
 **Technologies**
 
